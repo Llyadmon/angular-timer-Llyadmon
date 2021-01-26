@@ -5,32 +5,34 @@
     {{ toPrintTime }}
 </div>
 
-<!-- Buttons to interact with the timer -->
-<div class="manageBtns card d-flex flex-row justify-content-center">
-  <div class="start-btn btn" (click)="BtnStartTimer()">Démarrer / Reprendre</div>
+<div class="card btn-and-msg">
+  <!-- Buttons to interact with the timer -->
+  <div class="manageBtns d-flex flex-row justify-content-center">
+    <div class="start-stop-btn btn" (click)="BtnStartStopTimer()" [ngStyle]="{'backgroundColor': startStopText === 'Stop' ? 'red' : 'green'}">{{ startStopText }}</div>
 
-  <div class="stop-btn btn" (click)="BtnStopTimer()">Stop</div>
+    <div class="save-btn btn" (click)="BtnSaveTime()">Sauvegarder</div>
 
-  <div class="save-btn btn" (click)="BtnSaveTime()">Sauvegarder</div>
-
-  <div class="resume-btn btn" (click)="BtnResetTimer()">Remettre à 0</div>
+    <div class="resume-btn btn" (click)="BtnResetTimer()">Remettre à 0</div>
+  </div>
+  <div class="info-msg">
+    {{ msgInfo }}
+  </div>
 </div>
 
 <!-- Saved times will be printed here -->
-<table class="allSavedTimes card container">
-  <tr class="d-flex flex-row justify-content-between row">
-    <th class="box col-2">Temps</th>
-    <th class="box col-8">Note</th>
-    <th class="box col-2">Supprimer</th>
-  </tr>
-  <tr *ngFor="let currentTime of savedTimes; let currentTimeIndex = index" [attr.class]="'subCard d-flex flex-row justify-content-between row savedTime' + currentTimeIndex">
-    <td class="box col-2">{{ GetTimeFormat(currentTime) }}</td>
-    <td class="box savedTimeNote col-8"><input type="text"></td>
-    <td class="deleteSavedTime btn box col-2" (click)="DeleteSavedTime(currentTimeIndex)">X</td>
-  </tr>
-</table>
-
-<div class="infoMsg">
-  {{ msgInfo }}
+<div class="allSavedTimes card d-flex justify-content-between">
+  <table class="container">
+    <tr class="d-flex flex-row justify-content-between row">
+      <th class="box col-2">Temps</th>
+      <th class="box col-8">Note</th>
+      <th class="box col-2">Supprimer</th>
+    </tr>
+    <tr *ngFor="let currentTime of savedTimes; let currentTimeIndex = index" [attr.class]="'subCard d-flex flex-row justify-content-between row savedTime' + currentTimeIndex">
+      <td class="box col-2">{{ GetTimeFormat(currentTime) }}</td>
+      <td class="box savedTimeNote col-8"><input type="text" class="note"></td>
+      <td class="deleteSavedTime btn box col-2" (click)="DeleteSavedTime(currentTimeIndex)">X</td>
+    </tr>
+  </table>
+  <div class="btnDeleteAllSavedTimes btn" (click)="DeleteAllSavedTimes()">Supprimer tous les temps sauvegardés</div>
 </div>
 <router-outlet></router-outlet>

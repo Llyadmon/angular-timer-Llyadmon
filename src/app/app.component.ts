@@ -9,13 +9,13 @@ import { $ } from 'protractor';
 export class AppComponent {
   title = 'angular-timer';
 
-  public stopTimer: boolean = false;
-
+  // Numbers to calcul the timer's value when it starts and stops
   public startDate = 0;
   public currentTimer = 0;
   public stoppedTime = 0;
 
-  public toPrintTime = "00 : 00 : 00";
+  // Timer printed
+  public toPrintTime = "00 : 00 : 00 : 000";
 
   // Check if the timer is already running
   public timerRunning = false;
@@ -23,12 +23,18 @@ export class AppComponent {
   // Array of saved times
   public savedTimes: Array<number> = [];
 
+  // Timer's interval
   public timer: any;
 
-  public msgInfo = "";
+  // Defines the state of the Start/Stop button
+  public startStopText = "Démarrer / Reprendre";
+  // Printed message when a button is clicked
+  public msgInfo = "Bonjour";
 
-  BtnStartTimer(): void
+  // Start the timer if it is not running. Stop the timer if it is running
+  BtnStartStopTimer(): void
   {
+    // If the timer isn't running
     if (!this.timerRunning)
     {
       // If the timer got reseted or never started
@@ -47,17 +53,19 @@ export class AppComponent {
         this.currentTimer = new Date().getTime() - this.startDate;
 
         this.toPrintTime = this.GetTimeFormat(this.currentTimer);
-      }, 10);
+      }, 1);
+      this.startStopText = "Stop";
       this.msgInfo = "Chronomètre démarré/redémarré";
     }
-  }
-
-  BtnStopTimer(): void
-  {
-    clearInterval(this.timer);
-    this.timerRunning = false;
-    this.stoppedTime = this.currentTimer;
-    this.msgInfo = "Chronomètre mis en pause";
+    // If the timer is running
+    else
+    {
+      clearInterval(this.timer);
+      this.timerRunning = false;
+      this.startStopText = "Démarrer / Reprendre";
+      this.stoppedTime = this.currentTimer;
+      this.msgInfo = "Chronomètre mis en pause";
+    }
   }
 
   // Save the current time of the timer in savedTimes
@@ -67,9 +75,13 @@ export class AppComponent {
     this.msgInfo = "Temps sauvegardé";
   }
 
+  // Reset the timer to 0
   BtnResetTimer(): void
   {
-    this.BtnStopTimer();
+    if (this.timerRunning)
+    {
+      this.BtnStartStopTimer();
+    }
     this.startDate = 0;
     this.toPrintTime = this.GetTimeFormat(0);
     this.currentTimer = 0;
@@ -84,7 +96,7 @@ export class AppComponent {
     let nbHours = Math.floor(numberTime / 3600000);
     let nbMinutes = Math.floor(numberTime / 60000) % 60;
     let nbSeconds = Math.floor(numberTime / 1000) % 60;
-
+    let nbMilliseconds = numberTime % 1000;
 
     if (nbHours < 10)
     {
@@ -103,13 +115,33 @@ export class AppComponent {
     {
       toReturnTime = toReturnTime + "0";
     }
-    toReturnTime = toReturnTime + nbSeconds;
+    toReturnTime = toReturnTime + nbSeconds + " : ";
+
+    // Milliseconds
+    if (nbMilliseconds < 10)
+    {
+      toReturnTime = toReturnTime + "00";
+    }
+    else if (nbMilliseconds < 100)
+    {
+      toReturnTime = toReturnTime + "0";
+    }
+    toReturnTime = toReturnTime + nbMilliseconds;
 
     return (toReturnTime);
   }
 
+  // Delete a saved time in the table
   DeleteSavedTime(index: number): void
   {
     this.savedTimes.splice(index, 1);
+    this.msgInfo = "Temps sauvegardé supprimé";
+  }
+
+  // Delete all saved times
+  DeleteAllSavedTimes(): void
+  {
+    this.savedTimes = [];
+    this.msgInfo = "Tous les temps sauvegardés supprimés";
   }
 }
