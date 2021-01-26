@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { $ } from 'protractor';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +12,7 @@ export class AppComponent {
   public stopTimer: boolean = false;
 
   public startDate = 0;
-  public currentTimer = this.startDate - new Date().getTime();
+  public currentTimer = 0;
   public stoppedTime = 0;
 
   public toPrintTime = "00 : 00 : 00";
@@ -24,7 +25,9 @@ export class AppComponent {
 
   public timer: any;
 
-  btnStartTimer(): void
+  public msgInfo = "";
+
+  BtnStartTimer(): void
   {
     if (!this.timerRunning)
     {
@@ -43,35 +46,39 @@ export class AppComponent {
       {
         this.currentTimer = new Date().getTime() - this.startDate;
 
-        this.toPrintTime = this.getTimeFormat(this.currentTimer);
+        this.toPrintTime = this.GetTimeFormat(this.currentTimer);
       }, 10);
+      this.msgInfo = "Chronomètre démarré/redémarré";
     }
   }
 
-  btnStopTimer(): void
+  BtnStopTimer(): void
   {
     clearInterval(this.timer);
     this.timerRunning = false;
     this.stoppedTime = this.currentTimer;
+    this.msgInfo = "Chronomètre mis en pause";
   }
 
   // Save the current time of the timer in savedTimes
-  btnSaveTime(): void
+  BtnSaveTime(): void
   {
     this.savedTimes.push(this.currentTimer);
     console.table(this.savedTimes);
+    this.msgInfo = "Temps sauvegardé";
   }
 
-  btnResetTimer(): void
+  BtnResetTimer(): void
   {
-    this.btnStopTimer();
+    this.BtnStopTimer();
     this.startDate = 0;
-    this.toPrintTime = this.getTimeFormat(0);
+    this.toPrintTime = this.GetTimeFormat(0);
     this.currentTimer = 0;
+    this.msgInfo = "Chronomètre remis à 0";
   }
 
   // Format a number in format (string) : hh : mm : ss
-  getTimeFormat(numberTime: number): string
+  GetTimeFormat(numberTime: number): string
   {
     let toReturnTime = "";
 
@@ -100,5 +107,10 @@ export class AppComponent {
     toReturnTime = toReturnTime + nbSeconds;
 
     return (toReturnTime);
+  }
+
+  DeleteSavedTime(index: number): void
+  {
+    this.savedTimes.splice(index, 1);
   }
 }

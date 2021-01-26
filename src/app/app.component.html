@@ -1,33 +1,36 @@
 <h1>Chronomètre</h1>
 
 <!-- The timer will be printed here -->
-<div class="timer">
+<div class="timer card">
     {{ toPrintTime }}
 </div>
 
 <!-- Buttons to interact with the timer -->
-<div class="btns">
-  <div class="start-btn" (click)="btnStartTimer()">
-    Démarrer / Reprendre
-  </div>
+<div class="manageBtns card d-flex flex-row justify-content-center">
+  <div class="start-btn btn" (click)="BtnStartTimer()">Démarrer / Reprendre</div>
 
-  <div class="stop-btn" (click)="btnStopTimer()">
-    Stop
-  </div>
+  <div class="stop-btn btn" (click)="BtnStopTimer()">Stop</div>
 
-  <div class="save-btn" (click)="btnSaveTime()">
-    Sauvegarder
-  </div>
+  <div class="save-btn btn" (click)="BtnSaveTime()">Sauvegarder</div>
 
-  <div class="resume-btn" (click)="btnResetTimer()">
-    Remettre à 0
-  </div>
+  <div class="resume-btn btn" (click)="BtnResetTimer()">Remettre à 0</div>
 </div>
 
 <!-- Saved times will be printed here -->
-<div *ngFor="let currentTime of savedTimes; let currentTimeIndex = index" class="allSavedTimes">
-  <div [attr.class]="'savedTime' + currentTimeIndex">
-    {{ getTimeFormat(currentTime) }}
-  </div>
+<table class="allSavedTimes card container">
+  <tr class="d-flex flex-row justify-content-between row">
+    <th class="box col-2">Temps</th>
+    <th class="box col-8">Note</th>
+    <th class="box col-2">Supprimer</th>
+  </tr>
+  <tr *ngFor="let currentTime of savedTimes; let currentTimeIndex = index" [attr.class]="'subCard d-flex flex-row justify-content-between row savedTime' + currentTimeIndex">
+    <td class="box col-2">{{ GetTimeFormat(currentTime) }}</td>
+    <td class="box savedTimeNote col-8"><input type="text"></td>
+    <td class="deleteSavedTime btn box col-2" (click)="DeleteSavedTime(currentTimeIndex)">X</td>
+  </tr>
+</table>
+
+<div class="infoMsg">
+  {{ msgInfo }}
 </div>
 <router-outlet></router-outlet>
