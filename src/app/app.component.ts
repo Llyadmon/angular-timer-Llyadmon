@@ -64,7 +64,6 @@ export class AppComponent {
   BtnSaveTime(): void
   {
     this.savedTimes.push(this.currentTimer);
-    console.table(this.savedTimes);
     this.msgInfo = "Temps sauvegardé";
   }
 
